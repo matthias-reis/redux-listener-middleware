@@ -1,5 +1,5 @@
 {
-  "name": "redux-listener-middelware",
+  "name": "redux-listener-middleware",
   "description": "A Redux middleware, that listens for and reacts on Flux actions",
   "version": "0.1.0",
   "main": "lib/index.js",
