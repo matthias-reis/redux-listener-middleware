@@ -1,13 +1,14 @@
 {
   "name": "redux-observer",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": {
     "url": "git@github.com:matthias-reis/redux-interceptor-middleware.git",
     "type": "git"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "babel src --out-dir lib"
   },
   "author": "Matthias Reis <matthias.reis@xing.com>",
   "license": "MIT",
