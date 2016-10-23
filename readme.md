@@ -22,7 +22,7 @@ const store = createStore( //redux default
 );
 ```
 
-## creating a listener
+## Creating a Listener
 
 As a second step, the middleware can be augmented with listeners working
 on incoming actions.
@@ -35,7 +35,7 @@ middleware.createListener((action, dispatch) => { // the action and redux's disp
 });
 ```
 
-## creating rules for the listener
+## Creating Rules for the Listener
 
 Per se the listener doesn't react on any action. You must provide rules to
 activate their work.
@@ -135,3 +135,50 @@ can handle with this tool. to name but a few:
   including their rule set
 
 And so on ...
+
+## API in Detail
+
+### `listen()`
+
+The only export of the package is a function.
+
+- **Params:**
+  - none
+
+- **Returns:**
+  A fresh middleware. For the unlikely case that you have more than one
+  Redux store in place, you can also manage several listener middleware
+  instances.
+
+### `middleware.createListener(runner)`
+
+- **Params:**
+  - `runner`: the main handler function that gets handed over the following
+    - `action`: the flux action object to handle
+    - `dispatch(action: object)`: the original redux dispatch function
+
+- **Returns:** A chainable toolset with:
+  - `addRule`: applies a single rule
+  - `addRules`: applies a set of rules with one single statement
+
+## `toolset.addRule(rule, modifier)`
+
+- **Params:**
+  - `rule`: a string or a RegExp. The action type is matched against this.
+  - `modifier`: (optional) a function, where you can preprocess the action. The action is
+    handed over and the modified action must be returned.
+
+- **Returns:** A chainable toolset with:
+  - `addRule`: applies a single rule
+  - `addRules`: applies a set of rules with one single statement
+
+## `toolset.addRules(rules)`
+
+- **Params:**
+  - `rules`: an array of arrays consisting of `[rule, modifier]`. So
+    `mw.addRule('foo', action => action).addRule('bar', action => action)` is the same as
+    `mw.addRules([['foo', action => action], ['bar', action => action]])`
+
+- **Returns:** A chainable toolset with:
+  - `addRule`: applies a single rule
+  - `addRules`: applies a set of rules with one single statement

@@ -7,12 +7,15 @@ const listen = require('../src/index');
 const reducer = (state = 0, action) => {
   if (action.type === 'INCREMENT') {
     return state + 1;
+  } else if (action.type === 'DECREMENT') {
+    return state - 1;
   } else {
     return state;
   }
 };
 
 const increment = { type: 'INCREMENT' };
+const decrement = { type: 'DECREMENT' };
 
 describe('middleware setup', () => {
   it('has set up the test runner correctly', () => {
@@ -107,6 +110,50 @@ describe('middleware setup', () => {
     });
 
     store.dispatch(increment);
+  });
+
+  it('adds multiple rules with chaining to a listener', (done) => {
+    const listenerSpy = jest.fn();
+
+    const mw = listen();
+    mw.createListener(listenerSpy).addRule(/^INCR/).addRule(/^DECR/);
+
+    const store = redux.createStore(
+      reducer,
+      redux.applyMiddleware(mw)
+    );
+
+    store.dispatch(increment);
+
+    store.subscribe(() => {
+      expect(store.getState()).toEqual(0);
+      expect(listenerSpy).toHaveBeenCalledTimes(2);
+      done();
+    });
+
+    store.dispatch(decrement);
+  });
+
+  it('adds multiple rules with addRules() to a listener', (done) => {
+    const listenerSpy = jest.fn();
+
+    const mw = listen();
+    mw.createListener(listenerSpy).addRules([ [ /^INCR/ ], [ /^DECR/ ] ]);
+
+    const store = redux.createStore(
+      reducer,
+      redux.applyMiddleware(mw)
+    );
+
+    store.dispatch(increment);
+
+    store.subscribe(() => {
+      expect(store.getState()).toEqual(0);
+      expect(listenerSpy).toHaveBeenCalledTimes(2);
+      done();
+    });
+
+    store.dispatch(decrement);
   });
 
   it('calls listeners correctly', (done) => {

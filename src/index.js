@@ -20,9 +20,16 @@ module.exports = () => {
     };
     listeners.push(listener);
 
-    return {
-      addRule: (matcher, modifier = action => action) => listener.rules.push({ matcher, modifier })
+    const addRule = (matcher, modifier = action => action) => {
+      listener.rules.push({ matcher, modifier });
+      return { addRule, addRules };
     };
+    const addRules = rules => {
+      rules.map(rule => addRule(rule[ 0 ], rule[ 1 ]));
+      return { addRule, addRules };
+    };
+
+    return { addRule, addRules };
   };
 
   return middleware;
