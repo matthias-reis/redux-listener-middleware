@@ -66,6 +66,7 @@ describe('middleware setup', () => {
     });
 
     store.dispatch(increment);
+    store.dispatch({ foo: 'bar' }); // invalid actions handled gracefully
   });
 
   it('adds string based rules to a listener', (done) => {
