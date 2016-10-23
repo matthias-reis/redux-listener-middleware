@@ -1,0 +1,31 @@
+{
+  "name": "redux-observer",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": {
+    "url": "git@github.com:matthias-reis/redux-interceptor-middleware.git",
+    "type": "git"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Matthias Reis <matthias.reis@xing.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-preset-stage-0": "^6.16.0",
+    "jest": "^16.0.2",
+    "redux": "^3.6.0",
+    "babel": "^6.5.2",
+    "babel-jest": "^16.0.0"
+  },
+  "peerDependencies": {
+    "redux": "^3.6.0"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "moduleFileExtensions": ["js"]
+  }
+}
