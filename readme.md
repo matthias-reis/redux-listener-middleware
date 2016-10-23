@@ -3,6 +3,10 @@
 A Redux middleware that acts as a gerneral listener on actions
 that are dispatched to the Redux store.
 
+## Status
+
+[![Build Status](https://travis-ci.org/matthias-reis/redux-listener-middleware.svg?branch=master)](https://travis-ci.org/matthias-reis/redux-listener-middleware)
+
 ## Installing the Middleware
 
 The middleware itself can handle multiple listeners at the same time,
