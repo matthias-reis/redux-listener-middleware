@@ -7,6 +7,8 @@ that are dispatched to the Redux store.
 
 [![Build Status](https://travis-ci.org/matthias-reis/redux-listener-middleware.svg?branch=master)](https://travis-ci.org/matthias-reis/redux-listener-middleware)
 
+[![npm version](https://badge.fury.io/js/redux-listener-middleware.svg)](https://badge.fury.io/js/redux-listener-middleware)
+
 ## Installing the Middleware
 
 The middleware itself can handle multiple listeners at the same time,
