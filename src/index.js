@@ -1,4 +1,4 @@
-module.exports = () => {
+const createMiddleware = () => {
   const listeners = [];
 
   const middleware = ({ getState, dispatch }) => next => action => {
@@ -13,24 +13,29 @@ module.exports = () => {
     return next(action);
   };
 
-  middleware.createListener = (runner) => {
-    const listener = {
-      runner,
-      rules: []
-    };
-    listeners.push(listener);
-
-    const addRule = (matcher, modifier = action => action) => {
-      listener.rules.push({ matcher, modifier });
-      return { addRule, addRules };
-    };
-    const addRules = rules => {
-      rules.map(rule => addRule(rule[ 0 ], rule[ 1 ]));
-      return { addRule, addRules };
-    };
-
-    return { addRule, addRules };
-  };
+  middleware.addListener = (listener) => listeners.push(listener);
 
   return middleware;
 };
+
+const createListener = (runner) => {
+  const listener = {
+    runner,
+    rules: []
+  };
+
+  listener.addRule = (matcher, modifier = action => action) => {
+    listener.rules.push({ matcher, modifier });
+    return listener;
+  };
+
+  listener.addRules = rules => {
+    rules.map(rule => listener.addRule(rule[ 0 ], rule[ 1 ]));
+    return listener;
+  };
+
+  return listener;
+};
+
+
+module.exports = { createMiddleware, createListener };

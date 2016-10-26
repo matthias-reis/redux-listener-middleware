@@ -1,7 +1,8 @@
 /* eslint-env jest */
 
 const redux = require('redux');
-const listen = require('../src/index');
+const createMiddleware = require('../src/index').createMiddleware;
+const createListener = require('../src/index').createListener;
 // import { createStore } from 'redux';
 
 const reducer = (state = 0, action) => {
@@ -34,7 +35,7 @@ describe('middleware setup', () => {
   });
 
   it('applies the listener middleware', (done) => {
-    const mw = listen();
+    const mw = createMiddleware();
 
     const store = redux.createStore(
       reducer,
@@ -54,8 +55,9 @@ describe('middleware setup', () => {
   it('registers a new listener', (done) => {
     const listenerSpy = jest.fn();
 
-    const mw = listen();
-    mw.createListener(listenerSpy);
+    const mw = createMiddleware();
+    const listener = createListener(listenerSpy);
+    mw.addListener(listener);
 
     const store = redux.createStore(
       reducer,
@@ -75,9 +77,10 @@ describe('middleware setup', () => {
   it('adds string based rules to a listener', (done) => {
     const listenerSpy = jest.fn();
 
-    const mw = listen();
-    mw.createListener(listenerSpy).addRule('INCREMENT');
-
+    const mw = createMiddleware();
+    const listener = createListener(listenerSpy).addRule('INCREMENT');
+    mw.addListener(listener);
+    
     const store = redux.createStore(
       reducer,
       redux.applyMiddleware(mw)
@@ -95,8 +98,9 @@ describe('middleware setup', () => {
   it('adds RegExp based rules to a listener', (done) => {
     const listenerSpy = jest.fn();
 
-    const mw = listen();
-    mw.createListener(listenerSpy).addRule(/^INCR/);
+    const mw = createMiddleware();
+    const listener = createListener(listenerSpy).addRule(/^INCR/);
+    mw.addListener(listener);
 
     const store = redux.createStore(
       reducer,
@@ -115,8 +119,9 @@ describe('middleware setup', () => {
   it('adds multiple rules with chaining to a listener', (done) => {
     const listenerSpy = jest.fn();
 
-    const mw = listen();
-    mw.createListener(listenerSpy).addRule(/^INCR/).addRule(/^DECR/);
+    const mw = createMiddleware();
+    const listener = createListener(listenerSpy).addRule(/^INCR/).addRule(/^DECR/);
+    mw.addListener(listener);
 
     const store = redux.createStore(
       reducer,
@@ -137,8 +142,9 @@ describe('middleware setup', () => {
   it('adds multiple rules with addRules() to a listener', (done) => {
     const listenerSpy = jest.fn();
 
-    const mw = listen();
-    mw.createListener(listenerSpy).addRules([ [ /^INCR/ ], [ /^DECR/ ] ]);
+    const mw = createMiddleware();
+    const listener = createListener(listenerSpy).addRules([ [ /^INCR/ ], [ /^DECR/ ] ]);
+    mw.addListener(listener);
 
     const store = redux.createStore(
       reducer,
@@ -157,14 +163,15 @@ describe('middleware setup', () => {
   });
 
   it('calls listeners correctly', (done) => {
-    const listener = (action) => {
+    const runner = (action) => {
       expect(action.type).toEqual('INCREMENT');
       expect(action.payload).toBeUndefined();
       done();
     };
 
-    const mw = listen();
-    mw.createListener(listener).addRule('INCREMENT');
+    const mw = createMiddleware();
+    const listener = createListener(runner).addRule('INCREMENT');
+    mw.addListener(listener);
 
     const store = redux.createStore(
       reducer,
@@ -175,18 +182,20 @@ describe('middleware setup', () => {
   });
 
   it('can mutate actions with rules', (done) => {
-    const listener = (action) => {
+    const runner = (action) => {
       expect(action.type).toEqual('INCREMENT');
       expect(action.payload).toBeDefined();
       expect(action.payload.foo).toEqual('bar');
       done();
     };
 
-    const mw = listen();
-    mw.createListener(listener).addRule('INCREMENT', action => {
+    const mw = createMiddleware();
+    const listener = createListener(runner).addRule('INCREMENT', action => {
       action.payload = { foo: 'bar' };
       return action;
     });
+    mw.addListener(listener);
+
 
     const store = redux.createStore(
       reducer,
@@ -209,18 +218,20 @@ describe('middleware setup', () => {
       }
     };
 
-    const listener = (action, dispatch) => {
+    const runner = (action, dispatch) => {
       setTimeout(() => {
         dispatch(asyncAction(action.payload));
         done();
       }, 10);
     };
 
-    const mw = listen();
-    mw.createListener(listener).addRule('ADD_USER', action => ({
+    const mw = createMiddleware();
+    const listener = createListener(runner).addRule('ADD_USER', action => ({
       type: 'ADD_USER',
       payload: { firstName: 'Foo', lastName: 'Bar' }
     }));
+    mw.addListener(listener);
+
 
     const store = redux.createStore(
       userReducer,

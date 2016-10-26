@@ -1,7 +1,7 @@
 {
   "name": "redux-listener-middleware",
   "description": "A Redux middleware, that listens for and reacts on Flux actions",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "repository": {
     "url": "git@github.com:matthias-reis/redux-interceptor-middleware.git",
